@@ -16,25 +16,25 @@ User.findById(id).then((user)=>{
 
 
 // var id = '5c138fd4f92f65c20b5550d011';
-// if (!ObjectID.isValid(id)){
+// if (!ObjectID.isValid(id)){                //for checking whether the id is valid or not
 //     console.log('ID not valid');
 // }
 
 // // Todo.find({
 // //     _id: id
-// // }).then((todos)=>{
-// //     console.log('Todos',todos);
+// // }).then((todos)=>{                       //native find
+// //     console.log('Todos',todos);              
 // // });
 
 // // Todo.findOne({
 // //     _id: id
-// // }).then((todo)=>{
+// // }).then((todo)=>{                        //will return one one vaule that is the first it encounter
 // //     console.log('Todo',todo);
 // // });
 
-// Todo.findById(id).then((todo)=>{
+// Todo.findById(id).then((todo)=>{              //specific search by id
 //     if(!todo){
 //        return console.log('Id not found');
-//     }
+//     }                                          
 //     console.log('Todos',todo);
 // }).catch((e)=> console.log(e));
