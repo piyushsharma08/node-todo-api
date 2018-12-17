@@ -7,10 +7,12 @@ const {Todo}= require('./../models/todo');
 
 const todos = [{
     _id: new ObjectID(),
-    text:'first test todo'
+    text:'first test todo',
 },{
     _id: new ObjectID(),
-    text:'second test todo'
+    text:'second test todo',
+    completed: true,
+    completedAt: 333
 }];
 beforeEach((done)=>{
     Todo.remove({}).then(()=>{
@@ -129,4 +131,66 @@ describe('DELETE /todos/:id',()=>{
         .expect(404)
         .end(done);
     });
+});
+
+describe('PATCH /todos/:id',()=>{
+    it('should update the todo',(done)=>{
+        var id = todos[0]._id.toHexString();
+        var text = {
+            text:"what's up dude?",
+            completed:true
+        }
+        request(app)
+        .patch(`/todos/${id}`)
+        .send(text)
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body.todo._id).toBe(id);
+        })
+        .end((err,res)=>{
+            if(err){
+                return done(err);
+            }
+
+            Todo.findById(id).then((todo)=>{
+                expect(todo.text).toNotBe(todos[0].text);
+                expect(todo.completed).toBe(true);
+                expect(todo.completedAt).toBeA('number');
+                done();
+            })
+            .catch((e)=>done(e));
+        });
+
+    });
+
+
+    it('should clear completedAt when todo is not completed',(done)=>{
+        var id= todos[1]._id.toHexString();
+        var text ={
+            text:'My name is Mr. xyz',
+            completed:false
+        };
+        
+        request(app)
+        .patch(`/todos/${id}`)
+        .send(text)
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body.todo._id).toBe(id);
+        })
+        .end((err,res)=>{
+            if(err){
+                return done(err);
+            }
+
+            Todo.findById(id).then((todo)=>{
+                expect(todo.text).toNotBe(todos[1].text);
+                expect(todo.completed).toBe(false);
+                expect(todo.completedAt).toNotExist();
+                done();
+            })
+            .catch((e)=>done(e));
+        });
+    });
+
 });
